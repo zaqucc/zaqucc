@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -10,7 +10,7 @@
     
     <meta name="theme-color" id="status-bar-color" content="#000000">
     
-    <title>Playlist 2026</title>
+    <title>Playlist 2026 | Syarifuddin ska</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;400;600&display=swap');
 
@@ -34,7 +34,7 @@
             --active-item-bg: rgba(0, 0, 0, 0.08);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
 
         body, html {
             height: 100%;
@@ -47,14 +47,13 @@
             justify-content: center;
             align-items: center;
             -webkit-tap-highlight-color: transparent;
-            /* Memastikan konten mentok ke atas layar */
             padding-top: env(safe-area-inset-top);
         }
 
         #main-view-cc {
             width: 100%;
             height: 100%;
-            max-width: 380px; 
+            max-width: 400px; 
             display: flex;
             flex-direction: column;
             justify-content: center; 
@@ -88,9 +87,8 @@
         }
 
         .btn-cc.clicked {
-            background: #ffffff !important;
-            color: #000000 !important;
-            border-color: #ffffff !important;
+            background: var(--text-main) !important;
+            color: var(--bg-color) !important;
             transform: scale(0.95);
         }
 
@@ -101,7 +99,7 @@
             align-items: center;
             gap: 20px;
             opacity: 0;
-            transform: translateY(10px);
+            transform: translateY(15px);
             transition: all 1.2s cubic-bezier(0.22, 1, 0.36, 1);
         }
 
@@ -112,15 +110,17 @@
 
         .card-cc {
             width: 100%;
-            padding: 25px 20px;
+            padding: 30px 20px;
             background: var(--card-bg);
             border: 1px solid var(--border-color);
             border-radius: 35px;
             text-align: center;
-            backdrop-filter: blur(20px);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
             flex-shrink: 0;
         }
 
+        /* Visualizer Logic */
         .visualizer-cc {
             display: flex;
             justify-content: center;
@@ -133,6 +133,11 @@
             width: 3px;
             background: var(--visualizer-bar);
             border-radius: 2px;
+            height: 4px;
+            transition: height 0.3s ease;
+        }
+
+        .playing .bar-cc {
             animation: wave-cc 1.2s infinite ease-in-out;
         }
 
@@ -142,15 +147,15 @@
         }
 
         .title-cc { 
-            font-size: 0.85rem; 
+            font-size: 0.9rem; 
             font-weight: 600;
-            letter-spacing: 1px; 
+            letter-spacing: 0.5px; 
             color: var(--text-main); 
-            margin-bottom: 5px;
+            margin-bottom: 6px;
         }
 
         .subtitle-cc { 
-            font-size: 0.55rem; 
+            font-size: 0.6rem; 
             letter-spacing: 1.5px; 
             color: var(--text-sub); 
             text-transform: uppercase; 
@@ -161,60 +166,55 @@
             background: var(--card-bg);
             border: 1px solid var(--border-color);
             border-radius: 25px;
-            padding: 10px;
-            height: auto;
-            max-height: 55vh;
+            padding: 12px;
+            max-height: 50vh;
+            overflow-y: auto;
             display: flex;
             flex-direction: column;
+            scrollbar-width: none;
         }
 
+        .playlist-cc::-webkit-scrollbar { display: none; }
+
         .playlist-item {
-            padding: 10px 15px;
-            border-radius: 15px;
+            padding: 12px 15px;
+            border-radius: 18px;
             display: flex;
             flex-direction: column;
-            gap: 1px;
-            margin-bottom: 2px;
+            gap: 2px;
+            margin-bottom: 4px;
             text-align: left;
             transition: all 0.3s ease;
-            border: 1px solid transparent;
+            cursor: pointer;
         }
 
         .playlist-item.active {
-            background: var(--active-item-bg) !important;
-            border: 1px solid var(--border-color);
-            transform: scale(1.02);
+            background: var(--active-item-bg);
+            transform: scale(0.98);
         }
 
         .p-title {
-            font-size: 0.68rem;
+            font-size: 0.75rem;
             color: var(--text-main);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
 
-        .playlist-item.active .p-title {
-            font-weight: 600;
-        }
+        .playlist-item.active .p-title { font-weight: 600; }
 
         .p-sub {
-            font-size: 0.5rem;
+            font-size: 0.55rem;
             color: var(--text-sub);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
         }
 
         .footer-info {
             text-align: center;
-            width: 100%;
-            margin-top: 10px;
-            flex-shrink: 0;
+            margin-top: 5px;
         }
 
         .instruction-cc {
-            font-size: 0.45rem;
+            font-size: 0.5rem;
             letter-spacing: 1px;
             color: var(--text-sub);
             text-transform: uppercase;
@@ -224,7 +224,7 @@
         .copyright-cc {
             font-size: 0.5rem;
             color: var(--text-sub);
-            opacity: 0.7;
+            opacity: 0.6;
         }
     </style>
 </head>
@@ -236,7 +236,7 @@
         </div>
 
         <div class="container-player" id="container-element">
-            <div class="card-cc">
+            <div class="card-cc" id="player-card">
                 <div class="visualizer-cc">
                     <div class="bar-cc" style="animation-delay: 0.1s;"></div>
                     <div class="bar-cc" style="animation-delay: 0.3s;"></div>
@@ -250,8 +250,8 @@
             <div class="playlist-cc" id="playlist-list"></div>
             
             <div class="footer-info">
-                <div class="instruction-cc">Dbl click to switch theme • Select track</div>
-                <div class="copyright-cc">© 2026 Syarifuddin ska. All rights reserved.</div>
+                <div class="instruction-cc">Dbl click body to switch theme</div>
+                <div class="copyright-cc">© 2026 Syarifuddin ska.</div>
             </div>
         </div>
 
@@ -261,9 +261,9 @@
     <script>
         const playlist = [
             { url: "https://files.catbox.moe/h1ipk0.mp3", title: "CAPEK PURA-PURA? Peta Tak Bertuan", sub: "Titik Nol" },
-            { url: "https://files.catbox.moe/i0f0m3.mp3", title: "HARGA DIRI & FILOSOFI KOPI", sub: '"AIR, KOPI, DAN EVOLUSI"' },
+            { url: "https://files.catbox.moe/i0f0m3.mp3", title: "HARGA DIRI & FILOSOFI KOPI", sub: "Air, Kopi, dan Evolusi" },
             { url: "https://files.catbox.moe/3rcozs.mp3", title: "HENING DAN KETUKAN", sub: "Obat Overthinking Jam 3 Pagi" },
-            { url: "https://files.catbox.moe/gjl9o1.mp3", title: "DITANYA KAPAN NIKAH? Jawab Pakai Lagu Ini.", sub: '"MAKAN DULU"' },
+            { url: "https://files.catbox.moe/gjl9o1.mp3", title: "DITANYA KAPAN NIKAH?", sub: "Makan Dulu" },
             { url: "https://files.catbox.moe/moucle.mp3", title: "Hanya Bertahan", sub: "Maaf Ya Bu, Aku Lupa Cita-citaku Apa" },
             { url: "https://files.catbox.moe/dxx35x.mp3", title: "Lensa Lama", sub: "Melihat Sosok Yang Tak Lagi Kukenal" }
         ];
@@ -273,6 +273,7 @@
         const titleEl = document.getElementById('track-title');
         const subEl = document.getElementById('track-sub');
         const playlistContainer = document.getElementById('playlist-list');
+        const playerCard = document.getElementById('player-card');
 
         function renderPlaylist() {
             playlistContainer.innerHTML = '';
@@ -289,14 +290,38 @@
             });
         }
 
+        // Integrasi Lock Screen HP (Media Session)
+        function updateMediaSession(track) {
+            if ('mediaSession' in navigator) {
+                navigator.mediaSession.metadata = new MediaMetadata({
+                    title: track.title,
+                    artist: track.sub,
+                    album: 'Playlist 2026',
+                    artwork: [{ src: 'https://via.placeholder.com/512/000000/FFFFFF?text=2026', sizes: '512x512', type: 'image/png' }]
+                });
+
+                navigator.mediaSession.setActionHandler('previoustrack', () => {
+                    let prev = (currentTrackIndex - 1 + playlist.length) % playlist.length;
+                    playTrack(prev);
+                });
+                navigator.mediaSession.setActionHandler('nexttrack', () => {
+                    let next = (currentTrackIndex + 1) % playlist.length;
+                    playTrack(next);
+                });
+            }
+        }
+
         function playTrack(index) {
             currentTrackIndex = index;
             const track = playlist[index];
             audio.src = track.url;
             titleEl.innerText = track.title;
             subEl.innerText = track.sub;
+            
             renderPlaylist();
-            audio.play();
+            updateMediaSession(track);
+
+            audio.play().catch(() => console.log("User interaction needed"));
         }
 
         function startExperienceCC() {
@@ -310,27 +335,21 @@
             }, 300);
         }
 
+        // Audio Events
+        audio.onplay = () => playerCard.classList.add('playing');
+        audio.onpause = () => playerCard.classList.remove('playing');
         audio.onended = () => {
             let next = (currentTrackIndex + 1) % playlist.length;
             playTrack(next);
         };
 
-        function updateStatusBar() {
-            const meta = document.getElementById('status-bar-color');
-            if (document.body.classList.contains('light-mode')) {
-                meta.setAttribute('content', '#ffffff');
-            } else {
-                meta.setAttribute('content', '#000000');
-            }
-        }
-
         function toggleTheme() { 
             document.body.classList.toggle('light-mode'); 
-            updateStatusBar();
+            const meta = document.getElementById('status-bar-color');
+            meta.setAttribute('content', document.body.classList.contains('light-mode') ? '#ffffff' : '#000000');
         }
 
         renderPlaylist();
     </script>
 </body>
 </html>
-
