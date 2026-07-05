@@ -11,101 +11,222 @@
     <meta name="theme-color" id="status-bar-color" content="#000000">
     
     <title>Playlist 2026 | Syarifuddin ska</title>
-        <script>
-        const playlist = [
-            { url: "https://files.catbox.moe/h1ipk0.mp3", title: "CAPEK PURA-PURA? Peta Tak Bertuan", sub: "Titik Nol" },
-            { url: "https://files.catbox.moe/i0f0m3.mp3", title: "HARGA DIRI & FILOSOFI KOPI", sub: "Air, Kopi, dan Evolusi" },
-            { url: "https://files.catbox.moe/3rcozs.mp3", title: "HENING DAN KETUKAN", sub: "Obat Overthinking Jam 3 Pagi" },
-            { url: "https://files.catbox.moe/gjl9o1.mp3", title: "DITANYA KAPAN NIKAH?", sub: "Makan Dulu" },
-            { url: "https://files.catbox.moe/moucle.mp3", title: "Hanya Bertahan", sub: "Maaf Ya Bu, Aku Lupa Cita-citaku Apa" },
-            { url: "https://files.catbox.moe/dxx35x.mp3", title: "Lensa Lama", sub: "Melihat Sosok Yang Tak Lagi Kukenal" }
-        ];
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;400;600&display=swap');
 
-        let currentTrackIndex = 0;
-        const audio = document.getElementById('audio-cc');
-        const titleEl = document.getElementById('track-title');
-        const subEl = document.getElementById('track-sub');
-        const playlistContainer = document.getElementById('playlist-list');
-        const playerCard = document.getElementById('player-card');
-
-        function renderPlaylist() {
-            playlistContainer.innerHTML = '';
-            playlist.forEach((track, index) => {
-                const trackNumber = (index + 1).toString().padStart(2, '0');
-                const item = document.createElement('div');
-                item.className = `playlist-item ${index === currentTrackIndex ? 'active' : ''}`;
-                item.onclick = () => playTrack(index);
-                item.innerHTML = `
-                    <span class="p-title">${trackNumber}. ${track.title}</span>
-                    <span class="p-sub">${track.sub}</span>
-                `;
-                playlistContainer.appendChild(item);
-            });
+        :root {
+            --bg-color: #000000;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --text-main: #fffff0;
+            --text-sub: rgba(255, 255, 255, 0.4);
+            --visualizer-bar: #ffffff;
+            --active-item-bg: rgba(255, 255, 255, 0.15);
         }
 
-        // Integrasi Lock Screen HP (Media Session)
-        function updateMediaSession(track) {
-            if ('mediaSession' in navigator) {
-                navigator.mediaSession.metadata = new MediaMetadata({
-                    title: track.title,
-                    artist: track.sub,
-                    album: 'Playlist 2026',
-                    // Tautan gambar placeholder lama sudah diganti dengan logo.png Anda
-                    artwork: [{ src: 'logo.jpeg', sizes: '512x512', type: 'image/png' }]
-                });
-
-                navigator.mediaSession.setActionHandler('previoustrack', () => {
-                    let prev = (currentTrackIndex - 1 + playlist.length) % playlist.length;
-                    playTrack(prev);
-                });
-                navigator.mediaSession.setActionHandler('nexttrack', () => {
-                    let next = (currentTrackIndex + 1) % playlist.length;
-                    playTrack(next);
-                });
-            }
+        .light-mode {
+            --bg-color: #ffffff;
+            --card-bg: rgba(0, 0, 0, 0.03);
+            --border-color: rgba(0, 0, 0, 0.08);
+            --text-main: #1d1d1f;
+            --text-sub: rgba(0, 0, 0, 0.5);
+            --visualizer-bar: #000000;
+            --active-item-bg: rgba(0, 0, 0, 0.08);
         }
 
-        function playTrack(index) {
-            currentTrackIndex = index;
-            const track = playlist[index];
-            audio.src = track.url;
-            titleEl.innerText = track.title;
-            subEl.innerText = track.sub;
-            
-            renderPlaylist();
-            updateMediaSession(track);
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
 
-            audio.play().catch(() => console.log("User interaction needed"));
+        body, html {
+            height: 100%;
+            width: 100%;
+            overflow: hidden; 
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            transition: background-color 0.8s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            -webkit-tap-highlight-color: transparent;
+            padding-top: env(safe-area-inset-top);
         }
 
-        function startExperienceCC() {
-            const btn = document.getElementById('btn-exp');
-            btn.classList.add('clicked');
-            setTimeout(() => {
-                document.getElementById('overlay-cc').style.opacity = '0';
-                document.getElementById('container-element').classList.add('active');
-                playTrack(0);
-                setTimeout(() => { document.getElementById('overlay-cc').style.visibility = 'hidden'; }, 1000);
-            }, 300);
+        #main-view-cc {
+            width: 100%;
+            height: 100%;
+            max-width: 400px; 
+            display: flex;
+            flex-direction: column;
+            justify-content: center; 
+            padding: 20px 25px;
+            position: relative;
+            gap: 20px;
         }
 
-        // Audio Events
-        audio.onplay = () => playerCard.classList.add('playing');
-        audio.onpause = () => playerCard.classList.remove('playing');
-        audio.onended = () => {
-            let next = (currentTrackIndex + 1) % playlist.length;
-            playTrack(next);
-        };
-
-        function toggleTheme() { 
-            document.body.classList.toggle('light-mode'); 
-            const meta = document.getElementById('status-bar-color');
-            meta.setAttribute('content', document.body.classList.contains('light-mode') ? '#ffffff' : '#000000');
+        #overlay-cc {
+            position: fixed;
+            inset: 0;
+            background: var(--bg-color);
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 1s ease, visibility 1s;
         }
 
-        renderPlaylist();
-    </script>
+        .btn-cc {
+            background: none;
+            border: 1px solid var(--text-main);
+            color: var(--text-main);
+            padding: 16px 45px;
+            font-size: 0.7rem;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            border-radius: 100px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
 
+        .btn-cc.clicked {
+            background: var(--text-main) !important;
+            color: var(--bg-color) !important;
+            transform: scale(0.95);
+        }
+
+        .container-player {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            opacity: 0;
+            transform: translateY(15px);
+            transition: all 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .container-player.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .card-cc {
+            width: 100%;
+            padding: 30px 20px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 35px;
+            text-align: center;
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            flex-shrink: 0;
+        }
+
+        /* Visualizer Logic */
+        .visualizer-cc {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            height: 18px;
+            margin-bottom: 15px;
+        }
+
+        .bar-cc {
+            width: 3px;
+            background: var(--visualizer-bar);
+            border-radius: 2px;
+            height: 4px;
+            transition: height 0.3s ease;
+        }
+
+        .playing .bar-cc {
+            animation: wave-cc 1.2s infinite ease-in-out;
+        }
+
+        @keyframes wave-cc {
+            0%, 100% { height: 6px; }
+            50% { height: 18px; }
+        }
+
+        .title-cc { 
+            font-size: 0.9rem; 
+            font-weight: 600;
+            letter-spacing: 0.5px; 
+            color: var(--text-main); 
+            margin-bottom: 6px;
+        }
+
+        .subtitle-cc { 
+            font-size: 0.6rem; 
+            letter-spacing: 1.5px; 
+            color: var(--text-sub); 
+            text-transform: uppercase; 
+        }
+
+        .playlist-cc {
+            width: 100%;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 25px;
+            padding: 12px;
+            max-height: 50vh;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            scrollbar-width: none;
+        }
+
+        .playlist-cc::-webkit-scrollbar { display: none; }
+
+        .playlist-item {
+            padding: 12px 15px;
+            border-radius: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            margin-bottom: 4px;
+            text-align: left;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .playlist-item.active {
+            background: var(--active-item-bg);
+            transform: scale(0.98);
+        }
+
+        .p-title {
+            font-size: 0.75rem;
+            color: var(--text-main);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .playlist-item.active .p-title { font-weight: 600; }
+
+        .p-sub {
+            font-size: 0.55rem;
+            color: var(--text-sub);
+        }
+
+        .footer-info {
+            text-align: center;
+            margin-top: 5px;
+        }
+
+        .instruction-cc {
+            font-size: 0.5rem;
+            letter-spacing: 1px;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .copyright-cc {
+            font-size: 0.5rem;
+            color: var(--text-sub);
+            opacity: 0.6;
+        }
+    </style>
 </head>
 <body ondblclick="toggleTheme()">
 
@@ -176,7 +297,7 @@
                     title: track.title,
                     artist: track.sub,
                     album: 'Playlist 2026',
-                    artwork: [{ src: 'https://via.placeholder.com/512/000000/FFFFFF?text=2026', sizes: '512x512', type: 'image/png' }]
+                    artwork: [{ src: 'logo.jpeg', sizes: '512x512', type: 'image/png' }]
                 });
 
                 navigator.mediaSession.setActionHandler('previoustrack', () => {
